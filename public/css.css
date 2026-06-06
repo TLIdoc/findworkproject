@@ -295,7 +295,6 @@ h1 {
     transition: all 0.4s ease;
 }
 
-/* Коли ми крутимо сторінку, панель стає більш зібраною */
 .filter-panel.scrolled {
     background: rgba(2, 11, 38, 0.85);
     border-color: rgba(166, 5, 242, 0.5);

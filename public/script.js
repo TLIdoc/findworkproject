@@ -248,17 +248,17 @@ function loadAndApplySettings() {
 
     // Застосовуємо переклад залежно від налаштувань
     if (saved.language === "en") {
-        if (document.getElementById("search-input")) document.getElementById("search-input").placeholder = "⚡ Magic job search...";
-        if (document.getElementById("magic-compass")) document.getElementById("magic-compass").textContent = "🔮 Magic Compass";
-        if (document.getElementById("btn-settings")) document.getElementById("btn-settings").textContent = "⚙️ Settings";
-        if (document.getElementById("btn-back")) document.getElementById("btn-back").textContent = "⬅ Back to Jobs";
-        if (document.getElementById("settings-title")) document.getElementById("settings-title").textContent = "⚙️ System Settings";
+        if (document.getElementById("search-input")) document.getElementById("search-input").placeholder = "Magic job search...";
+        if (document.getElementById("magic-compass")) document.getElementById("magic-compass").textContent = "Magic Compass";
+        if (document.getElementById("btn-settings")) document.getElementById("btn-settings").textContent = "Settings";
+        if (document.getElementById("btn-back")) document.getElementById("btn-back").textContent = "Back to Jobs";
+        if (document.getElementById("settings-title")) document.getElementById("settings-title").textContent = "System Settings";
     } else {
-        if (document.getElementById("search-input")) document.getElementById("search-input").placeholder = "⚡ Магічний пошук за посадою...";
-        if (document.getElementById("magic-compass")) document.getElementById("magic-compass").textContent = "🔮 Магічний компас";
-        if (document.getElementById("btn-settings")) document.getElementById("btn-settings").textContent = "⚙️ Налаштування";
-        if (document.getElementById("btn-back")) document.getElementById("btn-back").textContent = "⬅ Назад до вакансій";
-        if (document.getElementById("settings-title")) document.getElementById("settings-title").textContent = "⚙️ Системні налаштування";
+        if (document.getElementById("search-input")) document.getElementById("search-input").placeholder = "Магічний пошук за посадою...";
+        if (document.getElementById("magic-compass")) document.getElementById("magic-compass").textContent = "Магічний компас";
+        if (document.getElementById("btn-settings")) document.getElementById("btn-settings").textContent = "Налаштування";
+        if (document.getElementById("btn-back")) document.getElementById("btn-back").textContent = "Назад до вакансій";
+        if (document.getElementById("settings-title")) document.getElementById("settings-title").textContent = "Системні налаштування";
     }
 
     // Анімації
