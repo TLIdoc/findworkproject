@@ -82,6 +82,7 @@
   "scripts": {
     "dev": "node --watch server.js",
     "start": "node server.js"
+    
   },
   "keywords": [],
   "author": "",
