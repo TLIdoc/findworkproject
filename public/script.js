@@ -5,8 +5,7 @@ let currentFilteredJobs = [];
 let targetUrl = "";
 let stickerTimeout;
 
-// ================= 2. ЛОГІКА ВААКАНСІЙ (ТІЛЬКИ ДЛЯ ГОЛОВНОЇ СТОРІНКИ) =================
-// Запускаємо завантаження ТІЛЬКИ якщо ми на головній сторінці (є контейнер)
+// ================= 2. ЛОГІКА ВАКАНСІЙ (ТІЛЬКИ ДЛЯ ГОЛОВНОЇ СТОРІНКИ) =================
 if (container) {
     loadJobs();
 }
@@ -157,7 +156,6 @@ function renderJobs(jobs) {
     });
 }
 
-// Слухачі подій для панелі фільтрів (перевіряємо чи вони існують)
 const magicCompass = document.getElementById("magic-compass");
 if (magicCompass) {
     magicCompass.addEventListener("click", () => {
@@ -180,8 +178,8 @@ function triggerFlash(e) {
     filterAndSortJobs();
 }
 
-const searchInput = document.getElementById("search-input");
-if (searchInput) searchInput.addEventListener("input", filterAndSortJobs);
+const searchInputDOM = document.getElementById("search-input");
+if (searchInputDOM) searchInputDOM.addEventListener("input", filterAndSortJobs);
 
 ["company-filter", "location-filter", "remote-filter", "employment-filter", "keyword-filter", "sort-date"].forEach(id => {
     const el = document.getElementById(id);
@@ -196,7 +194,6 @@ window.addEventListener("scroll", () => {
     }
 });
 
-// Модалка (YES OR NO / IDOC)
 function closeModal() {
     const modal = document.getElementById("confirm-modal");
     const sticker = document.getElementById("sticker-idoc");
@@ -214,12 +211,10 @@ if (modalConfirm) modalConfirm.addEventListener("click", () => {
     closeModal();
 });
 
-// ================= 3. ЛОГІКА ПЛАВНОГО ПЕРЕХОДУ МІЖ СТОРІНКАМИ =================
+// ================= 3. ЛОГІКА ПЕРЕХОДІВ =================
 function navigateSmoothly(url) {
     document.body.classList.add("page-leave");
-    setTimeout(() => {
-        window.location.href = url;
-    }, 400);
+    setTimeout(() => { window.location.href = url; }, 400);
 }
 
 const btnSettings = document.getElementById("btn-settings");
@@ -228,9 +223,9 @@ if (btnSettings) btnSettings.addEventListener("click", () => navigateSmoothly("/
 const btnBack = document.getElementById("btn-back");
 if (btnBack) btnBack.addEventListener("click", () => navigateSmoothly("/"));
 
-// ================= 4. ЗБЕРЕЖЕННЯ НАЛАШТУВАНЬ =================
+// ================= 4. ЗБЕРЕЖЕННЯ ТА ЗМІНА ТЕМИ =================
 const defaultSettings = {
-    theme: "cyberpunk",
+    theme: "cyberpunk", // або "dark"
     animations: true,
     language: "uk",
     brightness: 80
@@ -239,6 +234,7 @@ const defaultSettings = {
 function loadAndApplySettings() {
     const saved = JSON.parse(localStorage.getItem("idoc-settings")) || defaultSettings;
     
+    // Заповнюємо інпути в налаштуваннях (якщо ми там)
     if (document.getElementById("setting-language")) {
         document.getElementById("setting-theme").value = saved.theme;
         document.getElementById("setting-animations").checked = saved.animations;
@@ -246,52 +242,76 @@ function loadAndApplySettings() {
         document.getElementById("setting-brightness").value = saved.brightness;
     }
 
-    // Застосовуємо переклад залежно від налаштувань
-    if (saved.language === "en") {
-        if (document.getElementById("search-input")) document.getElementById("search-input").placeholder = "Magic job search...";
-        if (document.getElementById("magic-compass")) document.getElementById("magic-compass").textContent = "Magic Compass";
-        if (document.getElementById("btn-settings")) document.getElementById("btn-settings").textContent = "Settings";
-        if (document.getElementById("btn-back")) document.getElementById("btn-back").textContent = "Back to Jobs";
-        if (document.getElementById("settings-title")) document.getElementById("settings-title").textContent = "System Settings";
+    // Вмикаємо або вимикаємо НЕОН
+    if (saved.theme === "cyberpunk") {
+        document.body.classList.add("neon-theme");
     } else {
-        if (document.getElementById("search-input")) document.getElementById("search-input").placeholder = "Магічний пошук за посадою...";
-        if (document.getElementById("magic-compass")) document.getElementById("magic-compass").textContent = "Магічний компас";
-        if (document.getElementById("btn-settings")) document.getElementById("btn-settings").textContent = "Налаштування";
-        if (document.getElementById("btn-back")) document.getElementById("btn-back").textContent = "Назад до вакансій";
-        if (document.getElementById("settings-title")) document.getElementById("settings-title").textContent = "Системні налаштування";
+        document.body.classList.remove("neon-theme");
     }
 
-    // Анімації
+    // Переклад
+    if (saved.language === "en") {
+        if (document.getElementById("search-input")) document.getElementById("search-input").placeholder = "⚡ Magic job search...";
+        if (document.getElementById("magic-compass")) document.getElementById("magic-compass").textContent = "🔮 Magic Compass";
+        if (document.getElementById("btn-settings")) document.getElementById("btn-settings").textContent = "⚙️ Settings";
+        if (document.getElementById("theme-toggle-btn")) document.getElementById("theme-toggle-btn").textContent = "🌗 Change Style";
+    }
+
+    // Анімації та яскравість
     if (!saved.animations) {
         document.body.style.animation = "none";
-        const floatingPanel = document.getElementById("floating-panel");
-        if (floatingPanel) floatingPanel.style.animation = "none";
-    } else {
-        document.body.style.animation = "";
-        const floatingPanel = document.getElementById("floating-panel");
-        if (floatingPanel) floatingPanel.style.animation = "";
+        if (document.getElementById("floating-panel")) document.getElementById("floating-panel").style.animation = "none";
     }
-
-    // Яскравість
     document.body.style.opacity = saved.brightness / 100;
 }
 
 function saveSettings() {
     const settings = {
-        theme: document.getElementById("setting-theme").value,
-        animations: document.getElementById("setting-animations").checked,
-        language: document.getElementById("setting-language").value,
-        brightness: document.getElementById("setting-brightness").value
+        theme: document.getElementById("setting-theme") ? document.getElementById("setting-theme").value : "cyberpunk",
+        animations: document.getElementById("setting-animations") ? document.getElementById("setting-animations").checked : true,
+        language: document.getElementById("setting-language") ? document.getElementById("setting-language").value : "uk",
+        brightness: document.getElementById("setting-brightness") ? document.getElementById("setting-brightness").value : 80
     };
     localStorage.setItem("idoc-settings", JSON.stringify(settings));
     loadAndApplySettings(); 
 }
 
-// Прив'язка збереження до елементів налаштувань
+// Прив'язка до елементів сторінки налаштувань
 document.querySelectorAll(".save-trigger").forEach(element => {
     element.addEventListener("change", saveSettings);
     element.addEventListener("input", saveSettings); 
 });
 
-// Запускаємо налаштування візуалу
+// ЕФЕКТ ЕПІЧНОЇ ЗМІНИ ТЕМИ (на головній сторінці)
+const themeBtn = document.getElementById("theme-toggle-btn");
+if (themeBtn) {
+    themeBtn.addEventListener("click", () => {
+        const jobsContainer = document.getElementById("jobs-container");
+        const flashOverlay = document.getElementById("flash-overlay");
+        
+        // 1. Врубаємо спалах і трясіння
+        if (flashOverlay) flashOverlay.classList.add("flash-active");
+        if (jobsContainer) jobsContainer.classList.add("shake-active");
+
+        // 2. Через 150мс (на піку спалаху) міняємо тему
+        setTimeout(() => {
+            const saved = JSON.parse(localStorage.getItem("idoc-settings")) || defaultSettings;
+            saved.theme = saved.theme === "cyberpunk" ? "dark" : "cyberpunk";
+            localStorage.setItem("idoc-settings", JSON.stringify(saved));
+            loadAndApplySettings();
+        }, 150);
+
+        // 3. Знімаємо спалах 
+        setTimeout(() => {
+            if (flashOverlay) flashOverlay.classList.remove("flash-active");
+        }, 300);
+
+        // 4. Знімаємо трясіння після закінчення анімації
+        setTimeout(() => {
+            if (jobsContainer) jobsContainer.classList.remove("shake-active");
+        }, 600);
+    });
+}
+
+// Запускаємо налаштування візуалу при завантаженні сторінки
 loadAndApplySettings();
