@@ -93,7 +93,7 @@ function renderJobs(jobs) {
     if (jobs.length === 0) {
         container.innerHTML = `
             <div style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 50px; font-size: 1.2rem;">
-                Нічого не знайдено за обраними фільтрами 😢
+                Нічого не знайдено за обраними фільтрами 
             </div>`;
         return;
     }
@@ -222,6 +222,13 @@ if (btnSettings) btnSettings.addEventListener("click", () => navigateSmoothly("/
 
 const btnBack = document.getElementById("btn-back");
 if (btnBack) btnBack.addEventListener("click", () => navigateSmoothly("/"));
+
+const btnAbout = document.getElementById("about-btn");
+if (btnAbout) btnAbout.addEventListener("click", () => navigateSmoothly("/about"));
+
+// Слухач для кнопки "Назад" на сторінці "Про нас"
+const btnBackFromAbout = document.getElementById("btn-back-about");
+if (btnBackFromAbout) btnBackFromAbout.addEventListener("click", () => navigateSmoothly("/"));
 
 // ================= 4. ЗБЕРЕЖЕННЯ ТА ЗМІНА ТЕМИ =================
 const defaultSettings = {

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Про нас | Jobs App</title>
+    <link rel="stylesheet" href="css.css">
+    <style>
+        /* Додаткові стилі для красивого відображення контенту */
+        .about-content {
+            max-width: 800px;
+            width: 100%;
+            margin: 20px auto;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* Співвідношення сторін 16:9 */
+            height: 0;
+            overflow: hidden;
+            border-radius: 12px;
+            border: 1px solid var(--color-border);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .video-container iframe, .video-container video {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            border: none;
+        }
+        .contacts-list {
+            list-style: none;
+            padding: 0;
+        }
+        .contacts-list li {
+            margin: 10px 0;
+            color: var(--text-muted);
+        }
+        .contacts-list strong {
+            color: var(--text-white);
+        }
+    </style>
+</head>
+<body class="page-enter">
+
+    <div class="settings-container about-content">
+        
+        <div class="settings-header">
+            <button id="btn-back-about" class="nav-btn">← Назад</button>
+            <h1 style="margin: 0; font-size: 2rem;">Про нас</h1>
+        </div>
+
+        
+        <div class="set-card">
+            <h3>Про розробників</h3>
+            <p style="color: var(--text-muted); line-height: 1.6;">
+                Ми — команда амбітних розробників, що створюють магічні інструменти для пошуку роботи.
+            </p>
+        </div>
+
+        
+        <div class="set-card">
+            <h3>Презентація проєкту</h3>
+            <div class="video-container">
+                
+                <iframe 
+                    src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+                    title="Проєкт Презентація" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+
+        <!-- Блок контактів -->
+        <div class="set-card">
+            <h3>Контакти</h3>
+            <ul class="contacts-list">
+                <li><strong>Email:</strong> support@jobsapp.idoc</li>
+                <li><strong>Telegram:</strong> @idoc_magic_jobs</li>
+                <li><strong>Локація:</strong> Київ, Україна</li>
+            </ul>
+        </div>
+    </div>
+
+    
+    <script src="script.js"></script>
+</body>
+</html>
