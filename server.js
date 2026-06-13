@@ -25,6 +25,12 @@ const server = http.createServer(async (req, res) => {
         res.end(file);
         return;
     }
+    if (req.url === "/about" && req.method === "GET") {
+        res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+        let file = await fs.readFile(path.join(__dirname, "public", "about.html"));
+        res.end(file);
+        return;
+    }
 
     if (req.url === "/script.js" && req.method === "GET") {
         res.writeHead(200, { "Content-Type": "application/javascript" });

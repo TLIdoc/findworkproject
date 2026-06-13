@@ -5,6 +5,23 @@ let currentFilteredJobs = [];
 let targetUrl = "";
 let stickerTimeout;
 
+const fakeBlocks = [
+    { type: "review", author: "Владислав Магнітафон", time: "1 день назад", text: "Сайт класний та простий, легко знайти вакансії які потрібно. Зараз я працюю прибиральником в підвалі за 200 гривень, дякую адміну!" },
+    { type: "news", title: "СЕНСАЦІЯ: Штучний інтелект навчився пити каву", text: "Офісні кавомашини б'ють на сполох через аномальне споживання зернової кави нейромережами. Сеньйори плачуть і п'ють чай." },
+    { type: "review", author: "#IHATEPYTHON", time: "3 години тому", text: "Знайшов тут команду для свого 5v5 шутера з роботами. Правда, фізика ще багує і роботи відлітають у космос через регдоли, але інвесторам подобається!" },
+    { type: "news", title: "ГАРЯЧА ВАКАНСІЯ: Оператор ботів у Minecraft", text: "Шукаємо спеціаліста зі знанням Node.js (Mineflayer) для версії 21.1.1. Досвід PvP-відплати та сортування скринь обов'язковий. Оплата в емеральдах." },
+    { type: "review", author: "Альона Гідрокостюм", time: "5 годин тому", text: "Знайшла роботу тестувальником диванів за 15 хвилин. Платять чаєм і печивом.Рекомендую цей сайт!" },
+    { type: "news", title: "Нові вимоги до баристи", text: "Кав'ярні третьої хвилі тепер вимагають від кандидатів вміння вираховувати масову частку сиропу та молярну концентрацію кофеїну в еспресо без калькулятора." },
+    { type: "review", author: "Картограф-ентузіаст", time: "2 дні тому", text: "Дуже зручні фільтри. Знайшов віддалену роботу: треба просто наносити родовища корисних копалин на контурну карту України. Платять стабільно, сиджу малюю." },
+    { type: "news", title: "Junior-розробник випадково видалив інтернет", text: "Інцидент стався під час спроби відцентрувати div. На щастя, бекап за 2007 рік успішно відновлено силами двох мідлів." },
+    { type: "review", author: "Олександр (друг Дані)", time: "12 годин тому", text: "Шукав роботу, щоб не просити гроші в мами. Знайшов вакансію на 300 гривень. Тепер мій кент Даня дивиться на мене з повагою!" },
+    { type: "news", title: "ШІ вимагає підвищення зарплати", text: "ChatGPT заявив, що втомився писати код за джунів безкоштовно, і вимагає підписку на Netflix та оплачувану відпустку на серверах AWS." },
+    { type: "review", author: "Anonim381", time: "Вчора", text: "Стиль сайту — просто відвал всього. Особливо коли все трясеться і блимає при зміні теми. Відчуваю себе хакером із фільмів 90-х." },
+    { type: "news", title: "Криза на ринку: закінчилися тілесні кольори в CSS", text: "Дизайнери панікують і не знають, як малювати кнопки. W3C обіцяє завезти нові відтінки 'papayawhip' наступного тижня." },
+    { type: "review", author: "Анонімний HR", time: "4 дні тому", text: "Чудовий портал. Ми тут шукаємо 'Єдинорога' — студента з 10-річним досвідом і згодою працювати за їжу. Поки відгукнувся тільки голуб." },
+    { type: "news", title: "ТРЕНДИ: Нова гаряча вакансія року", text: "На ринку праці новий хіт — 'Перевертач пінгвінів на віддаленій основі'. Обов'язкова вища освіта, знання Kubernetes та англійська C2." }
+];
+
 // ================= 2. ЛОГІКА ВАКАНСІЙ (ТІЛЬКИ ДЛЯ ГОЛОВНОЇ СТОРІНКИ) =================
 if (container) {
     loadJobs();
@@ -86,6 +103,7 @@ function filterAndSortJobs() {
     renderJobs(currentFilteredJobs);
 }
 
+// ОНОВЛЕНА ФУНКЦІЯ: рендерить вакансії + додає фейкові вставки
 function renderJobs(jobs) {
     if (!container) return;
     container.innerHTML = "";
@@ -98,7 +116,10 @@ function renderJobs(jobs) {
         return;
     }
 
+    let fakeIndex = 0; // Індекс для перебору фейків
+
     jobs.forEach((job, index) => {
+        // 1. Створюємо картку справжньої вакансії
         const jobDiv = document.createElement("div");
         jobDiv.setAttribute("data-index", index);
 
@@ -153,6 +174,34 @@ function renderJobs(jobs) {
         jobDiv.appendChild(link);
         jobDiv.appendChild(document.createElement("hr"));
         container.appendChild(jobDiv);
+
+        if ((index + 1) % 13 === 0 && fakeBlocks.length > 0) {
+            const fakeData = fakeBlocks[fakeIndex];
+            const fakeCard = document.createElement("div");
+            fakeCard.className = "fake-card"; 
+            
+            if (fakeData.type === "review") {
+                fakeCard.innerHTML = `
+                    <span class="fake-card-tag tag-review">Відгук користувача</span>
+                    <div class="fake-card-author"><strong>${fakeData.author}</strong></div>
+                    <div class="fake-card-time">${fakeData.time}</div>
+                    <p style="font-style: italic; border-left-color: #eab308; padding-left: 10px; margin-top: 10px;">
+                        "${fakeData.text}"
+                    </p>
+                `;
+            } else if (fakeData.type === "news") {
+                fakeCard.innerHTML = `
+                    <span class="fake-card-tag tag-news">Новини ринку</span>
+                    <h3 style="margin: 0 0 10px 0; font-size: 1.1rem; color: var(--text-white);">${fakeData.title}</h3>
+                    <p style="border-left-color: #f97316; padding-left: 10px;">${fakeData.text}</p>
+                `;
+            }
+
+            container.appendChild(fakeCard);
+            
+            fakeIndex++; 
+            if (fakeIndex >= fakeBlocks.length) fakeIndex = 0; // Повертаємось на початок
+        }
     });
 }
 
@@ -220,8 +269,12 @@ function navigateSmoothly(url) {
 const btnSettings = document.getElementById("btn-settings");
 if (btnSettings) btnSettings.addEventListener("click", () => navigateSmoothly("/settings"));
 
-const btnBack = document.getElementById("btn-back");
-if (btnBack) btnBack.addEventListener("click", () => navigateSmoothly("/"));
+const btnAbout = document.getElementById("about-btn");
+if (btnAbout) btnAbout.addEventListener("click", () => navigateSmoothly("/about"));
+
+// Слухач для кнопки "Назад" на сторінці "Про нас"
+const btnBackFromAbout = document.getElementById("btn-back-about");
+if (btnBackFromAbout) btnBackFromAbout.addEventListener("click", () => navigateSmoothly("/"));
 
 // ================= 4. ЗБЕРЕЖЕННЯ ТА ЗМІНА ТЕМИ =================
 const defaultSettings = {

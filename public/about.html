@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Про нас | Jobs App</title>
+    <link rel="stylesheet" href="css.css">
+    <style>
+        /* Додаткові стилі для красивого відображення контенту */
+        .about-content {
+            max-width: 800px;
+            width: 100%;
+            margin: 20px auto;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* Співвідношення сторін 16:9 */
+            height: 0;
+            overflow: hidden;
+            border-radius: 12px;
+            border: 1px solid var(--color-border);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .video-container iframe, .video-container video {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            border: none;
+        }
+        .contacts-list {
+            list-style: none;
+            padding: 0;
+        }
+        .contacts-list li {
+            margin: 10px 0;
+            color: var(--text-muted);
+        }
+        .contacts-list strong {
+            color: var(--text-white);
+        }
+    </style>
+</head>
+<body class="page-enter">
+
+    <div class="settings-container about-content">
+        <!-- Шапка сторінки з кнопкою Назад -->
+        <div class="settings-header">
+            <button id="btn-back-about" class="nav-btn">← Назад</button>
+            <h1 style="margin: 0; font-size: 2rem;">Про нас</h1>
+        </div>
+
+        <!-- Блок інформації про розробників -->
+        <div class="set-card">
+            <h3>Про авторів</h3>
+            <p style="color: var(--text-muted); line-height: 1.6;">
+Ми створюємо інструменти для пошуку роботи, бо звичайні сайти виглядають так, ніби їх писали динозаври на перфокартах.
+Цей додаток не має жодного відношення до ШІ — він працює на чистому ентузіазмі та багах, які ми видали за фічі. А ще тут є Магічний Компас, який просто кидає кубики за твою кар'єру..
+Натисни на нього, і він алгоритмічно-випадково визначить,
+де ти працюватимеш завтра: у Google чи збиратимеш полуницю
+            </p>
+        </div>
+
+        <!-- Блок з відео (Заміни посилання на своє відео, якщо треба) -->
+        <div class="set-card">
+            <h3>Презентація проєкту</h3>
+            <div class="video-container">
+                <!-- Шаблон YouTube-відео (можна замінити на тег <video src="..."></video>) -->
+                <iframe 
+                    src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+                    title="Проєкт Презентація" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+
+        <!-- Блок контактів -->
+        <div class="set-card">
+            <h3>Контакти для зв'язку</h3>
+            <ul class="contacts-list">
+                <li><strong>Email:</strong> support@jobsapp.idoc</li>
+                <li><strong>Telegram:</strong> @idoc_magic_jobs</li>
+                <li><strong>Локація:</strong> Київ, Україна</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Підключаємо скрипт для збереження логіки теми -->
+    <script src="script.js"></script>
+</body>
+</html>
