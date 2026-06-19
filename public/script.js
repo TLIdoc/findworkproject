@@ -1,9 +1,27 @@
-// ================= 1. ГЛОБАЛЬНІ ЗМІННІ =================
 const container = document.getElementById("jobs-container");
 let allJobs = []; 
 let currentFilteredJobs = []; 
 let targetUrl = "";
 let stickerTimeout;
+// pinned jobs stored by job URL
+let pinnedJobs = new Set(JSON.parse(localStorage.getItem("pinnedJobs") || "[]"));
+
+function savePinned() {
+    localStorage.setItem("pinnedJobs", JSON.stringify(Array.from(pinnedJobs)));
+}
+
+function togglePin(url, btn) {
+    if (!url) return;
+    if (pinnedJobs.has(url)) {
+        pinnedJobs.delete(url);
+        if (btn) { btn.classList.remove('active'); btn.innerHTML = '☆'; }
+    } else {
+        pinnedJobs.add(url);
+        if (btn) { btn.classList.add('active'); btn.innerHTML = '★'; }
+    }
+    savePinned();
+    filterAndSortJobs();
+}
 
 const fakeBlocks = [
     { type: "review", author: "Владислав Магнітафон", time: "1 день назад", text: "Сайт класний та простий, легко знайти вакансії які потрібно. Зараз я працюю прибиральником в підвалі за 200 гривень, дякую адміну!" },
@@ -22,7 +40,6 @@ const fakeBlocks = [
     { type: "news", title: "ТРЕНДИ: Нова гаряча вакансія року", text: "На ринку праці новий хіт — 'Перевертач пінгвінів на віддаленій основі'. Обов'язкова вища освіта, знання Kubernetes та англійська C2." }
 ];
 
-// ================= 2. ЛОГІКА ВАКАНСІЙ (ТІЛЬКИ ДЛЯ ГОЛОВНОЇ СТОРІНКИ) =================
 if (container) {
     loadJobs();
 }
@@ -42,7 +59,7 @@ async function loadJobs() {
 
 function populateFilters(jobs) {
     const companySelect = document.getElementById("company-filter");
-    if (!companySelect) return; // Якщо ми в налаштуваннях — припиняємо виконання
+    if (!companySelect) return;
 
     const companies = new Set();
     const locations = new Set();
@@ -100,10 +117,18 @@ function filterAndSortJobs() {
         return sortDateVal === "newest" ? dateB - dateA : dateA - dateB;
     });
 
+    // Move pinned jobs to top while keeping relative order
+    currentFilteredJobs.sort((a, b) => {
+        const aPinned = pinnedJobs.has(a.url);
+        const bPinned = pinnedJobs.has(b.url);
+        if (aPinned && !bPinned) return -1;
+        if (!aPinned && bPinned) return 1;
+        return 0;
+    });
+
     renderJobs(currentFilteredJobs);
 }
 
-// ОНОВЛЕНА ФУНКЦІЯ: рендерить вакансії + додає фейкові вставки
 function renderJobs(jobs) {
     if (!container) return;
     container.innerHTML = "";
@@ -116,12 +141,24 @@ function renderJobs(jobs) {
         return;
     }
 
-    let fakeIndex = 0; // Індекс для перебору фейків
+    let fakeIndex = 0;
 
     jobs.forEach((job, index) => {
-        // 1. Створюємо картку справжньої вакансії
         const jobDiv = document.createElement("div");
         jobDiv.setAttribute("data-index", index);
+        jobDiv.classList.toggle('pinned', pinnedJobs.has(job.url));
+
+        // pin button
+        const pinBtn = document.createElement('button');
+        pinBtn.className = 'pin-btn';
+        pinBtn.title = 'Закріпити вакансію';
+        pinBtn.innerHTML = pinnedJobs.has(job.url) ? '★' : '☆';
+        if (pinnedJobs.has(job.url)) pinBtn.classList.add('active');
+        pinBtn.addEventListener('click', (ev) => {
+            ev.stopPropagation();
+            togglePin(job.url, pinBtn);
+        });
+        jobDiv.appendChild(pinBtn);
 
         const title = document.createElement("h2");
         title.textContent = job.role;
@@ -200,7 +237,7 @@ function renderJobs(jobs) {
             container.appendChild(fakeCard);
             
             fakeIndex++; 
-            if (fakeIndex >= fakeBlocks.length) fakeIndex = 0; // Повертаємось на початок
+            if (fakeIndex >= fakeBlocks.length) fakeIndex = 0;
         }
     });
 }
@@ -260,32 +297,20 @@ if (modalConfirm) modalConfirm.addEventListener("click", () => {
     closeModal();
 });
 
-// ================= 3. ЛОГІКА ПЕРЕХОДІВ =================
 function navigateSmoothly(url) {
     document.body.classList.add("page-leave");
     setTimeout(() => { window.location.href = url; }, 400);
 }
 
-const btnSettings = document.getElementById("btn-settings");
-if (btnSettings) btnSettings.addEventListener("click", () => navigateSmoothly("/settings"));
 
 const btnAbout = document.getElementById("about-btn");
 if (btnAbout) btnAbout.addEventListener("click", () => navigateSmoothly("/about"));
 
-// Слухач для кнопки "Назад" на сторінці "Про нас"
 const btnBackFromAbout = document.getElementById("btn-back-about");
 if (btnBackFromAbout) btnBackFromAbout.addEventListener("click", () => navigateSmoothly("/"));
 
-const btnAbout = document.getElementById("about-btn");
-if (btnAbout) btnAbout.addEventListener("click", () => navigateSmoothly("/about"));
-
-// Слухач для кнопки "Назад" на сторінці "Про нас"
-const btnBackFromAbout = document.getElementById("btn-back-about");
-if (btnBackFromAbout) btnBackFromAbout.addEventListener("click", () => navigateSmoothly("/"));
-
-// ================= 4. ЗБЕРЕЖЕННЯ ТА ЗМІНА ТЕМИ =================
 const defaultSettings = {
-    theme: "cyberpunk", // або "dark"
+    theme: "cyberpunk",
     animations: true,
     language: "uk",
     brightness: 80
@@ -294,7 +319,6 @@ const defaultSettings = {
 function loadAndApplySettings() {
     const saved = JSON.parse(localStorage.getItem("idoc-settings")) || defaultSettings;
     
-    // Заповнюємо інпути в налаштуваннях (якщо ми там)
     if (document.getElementById("setting-language")) {
         document.getElementById("setting-theme").value = saved.theme;
         document.getElementById("setting-animations").checked = saved.animations;
@@ -302,14 +326,12 @@ function loadAndApplySettings() {
         document.getElementById("setting-brightness").value = saved.brightness;
     }
 
-    // Вмикаємо або вимикаємо НЕОН
     if (saved.theme === "cyberpunk") {
         document.body.classList.add("neon-theme");
     } else {
         document.body.classList.remove("neon-theme");
     }
 
-    // Переклад
     if (saved.language === "en") {
         if (document.getElementById("search-input")) document.getElementById("search-input").placeholder = "⚡ Magic job search...";
         if (document.getElementById("magic-compass")) document.getElementById("magic-compass").textContent = "🔮 Magic Compass";
@@ -317,7 +339,6 @@ function loadAndApplySettings() {
         if (document.getElementById("theme-toggle-btn")) document.getElementById("theme-toggle-btn").textContent = "🌗 Change Style";
     }
 
-    // Анімації та яскравість
     if (!saved.animations) {
         document.body.style.animation = "none";
         if (document.getElementById("floating-panel")) document.getElementById("floating-panel").style.animation = "none";
@@ -336,24 +357,20 @@ function saveSettings() {
     loadAndApplySettings(); 
 }
 
-// Прив'язка до елементів сторінки налаштувань
 document.querySelectorAll(".save-trigger").forEach(element => {
     element.addEventListener("change", saveSettings);
     element.addEventListener("input", saveSettings); 
 });
 
-// ЕФЕКТ ЕПІЧНОЇ ЗМІНИ ТЕМИ (на головній сторінці)
 const themeBtn = document.getElementById("theme-toggle-btn");
 if (themeBtn) {
     themeBtn.addEventListener("click", () => {
         const jobsContainer = document.getElementById("jobs-container");
         const flashOverlay = document.getElementById("flash-overlay");
         
-        // 1. Врубаємо спалах і трясіння
         if (flashOverlay) flashOverlay.classList.add("flash-active");
         if (jobsContainer) jobsContainer.classList.add("shake-active");
 
-        // 2. Через 150мс (на піку спалаху) міняємо тему
         setTimeout(() => {
             const saved = JSON.parse(localStorage.getItem("idoc-settings")) || defaultSettings;
             saved.theme = saved.theme === "cyberpunk" ? "dark" : "cyberpunk";
@@ -361,17 +378,14 @@ if (themeBtn) {
             loadAndApplySettings();
         }, 150);
 
-        // 3. Знімаємо спалах 
         setTimeout(() => {
             if (flashOverlay) flashOverlay.classList.remove("flash-active");
         }, 300);
 
-        // 4. Знімаємо трясіння після закінчення анімації
         setTimeout(() => {
             if (jobsContainer) jobsContainer.classList.remove("shake-active");
         }, 600);
     });
 }
 
-// Запускаємо налаштування візуалу при завантаженні сторінки
 loadAndApplySettings();
