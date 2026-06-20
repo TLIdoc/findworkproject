@@ -312,7 +312,7 @@ const btnBackFromAbout = document.getElementById("btn-back-about");
 if (btnBackFromAbout) btnBackFromAbout.addEventListener("click", () => navigateSmoothly("/"));
 
 const defaultSettings = {
-    theme: "cyberpunk",
+    theme: "dark",
     animations: true,
     language: "uk",
     brightness: 80
@@ -350,7 +350,7 @@ function loadAndApplySettings() {
 
 function saveSettings() {
     const settings = {
-        theme: document.getElementById("setting-theme") ? document.getElementById("setting-theme").value : "cyberpunk",
+        theme: document.getElementById("setting-theme") ? document.getElementById("setting-theme").value : "dark",
         animations: document.getElementById("setting-animations") ? document.getElementById("setting-animations").checked : true,
         language: document.getElementById("setting-language") ? document.getElementById("setting-language").value : "uk",
         brightness: document.getElementById("setting-brightness") ? document.getElementById("setting-brightness").value : 80
