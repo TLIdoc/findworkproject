@@ -47,7 +47,8 @@ if (container) {
 
 async function loadJobs() {
     try {
-        const response = await fetch("http://localhost:3000/api/jobs");
+        // ✅ ВИПРАВЛЕНО: Відносний шлях для роботи на Render та локалхості одночасно
+        const response = await fetch("/api/jobs");
         const data = await response.json();
         allJobs = data.results || [];
         
