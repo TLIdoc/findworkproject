@@ -2,6 +2,7 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
+    <!-- ОЦЕЙ РЯДОК РОБИТЬ АДЕКВАТНИЙ МАСШТАБ НА МОБІЛКАХ: -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Про нас | Jobs App</title>
     <link rel="stylesheet" href="css.css">
@@ -14,7 +15,38 @@
             display: flex;
             flex-direction: column;
             gap: 25px;
+            box-sizing: border-box;
+            padding: 0 15px; /* Захист, щоб на мобілках контент не липнув до країв */
         }
+        
+        /* Центруємо заголовок та блоки на мобільних пристроях */
+        .settings-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            width: 100%;
+        }
+
+        .set-card {
+            width: 100%;
+            box-sizing: border-box;
+            text-align: center; /* Центруємо текст всередині карток для адекватності */
+        }
+
+        /* Центруємо списки контактів */
+        .contacts-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center; 
+        }
+
+        /* ПОПРАВИВ НИЖЧЕ: Посуваємо блок презентації трохи вниз */
+        .presentation-block {
+            margin-top: 15px; 
+        }
+
         .video-container {
             position: relative;
             padding-bottom: 56.25%; /* Співвідношення сторін 16:9 */
@@ -23,6 +55,7 @@
             border-radius: 12px;
             border: 1px solid var(--color-border);
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            width: 100%;
         }
         .video-container iframe, .video-container video {
             position: absolute;
@@ -30,16 +63,27 @@
             width: 100%; height: 100%;
             border: none;
         }
-        .contacts-list {
-            list-style: none;
-            padding: 0;
-        }
         .contacts-list li {
             margin: 10px 0;
             color: var(--text-muted);
         }
         .contacts-list strong {
             color: var(--text-white);
+        }
+
+        /* Спеціальні правки суто для мобілок, щоб нічого не вилазило */
+        @media (max-width: 600px) {
+            .about-content {
+                margin: 10px auto;
+                gap: 20px;
+            }
+            .settings-header h1 {
+                font-size: 1.6rem !important;
+            }
+            .set-card p {
+                font-size: 0.95rem;
+                text-align: center;
+            }
         }
     </style>
 </head>
@@ -63,8 +107,8 @@
             </p>
         </div>
 
-        <!-- Блок з відео (Заміни посилання на своє відео, якщо треба) -->
-        <div class="set-card">
+        <!-- Поправив цей блок вниз за допомогою класу presentation-block -->
+        <div class="set-card presentation-block">
             <h3>Презентація проєкту</h3>
             <div class="video-container">
                     <div class="video-placeholder" aria-hidden="true" style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-muted);">
