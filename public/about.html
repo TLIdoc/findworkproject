@@ -2,12 +2,10 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <!-- ОЦЕЙ РЯДОК РОБИТЬ АДЕКВАТНИЙ МАСШТАБ НА МОБІЛКАХ: -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Про нас | Jobs App</title>
     <link rel="stylesheet" href="css.css">
     <style>
-        /* Додаткові стилі для красивого відображення контенту */
         .about-content {
             max-width: 800px;
             width: 100%;
@@ -16,10 +14,9 @@
             flex-direction: column;
             gap: 25px;
             box-sizing: border-box;
-            padding: 0 15px; /* Захист, щоб на мобілках контент не липнув до країв */
+            padding: 0 15px;
         }
         
-        /* Центруємо заголовок та блоки на мобільних пристроях */
         .settings-header {
             display: flex;
             align-items: center;
@@ -30,10 +27,9 @@
         .set-card {
             width: 100%;
             box-sizing: border-box;
-            text-align: center; /* Центруємо текст всередині карток для адекватності */
+            text-align: center;
         }
 
-        /* Центруємо списки контактів */
         .contacts-list {
             list-style: none;
             padding: 0;
@@ -42,14 +38,13 @@
             align-items: center; 
         }
 
-        /* ПОПРАВИВ НИЖЧЕ: Посуваємо блок презентації трохи вниз */
         .presentation-block {
             margin-top: 15px; 
         }
 
         .video-container {
             position: relative;
-            padding-bottom: 56.25%; /* Співвідношення сторін 16:9 */
+            padding-bottom: 56.25%;
             height: 0;
             overflow: hidden;
             border-radius: 12px;
@@ -70,8 +65,6 @@
         .contacts-list strong {
             color: var(--text-white);
         }
-
-        /* Спеціальні правки суто для мобілок, щоб нічого не вилазило */
         @media (max-width: 600px) {
             .about-content {
                 margin: 10px auto;
@@ -96,7 +89,6 @@
             <h1 style="margin: 0; font-size: 2rem;">Про нас</h1>
         </div>
 
-        <!-- Блок інформації про розробників -->
         <div class="set-card">
             <h3>Про авторів</h3>
             <p style="color: var(--text-muted); line-height: 1.6;">
@@ -107,7 +99,6 @@
             </p>
         </div>
 
-        <!-- Поправив цей блок вниз за допомогою класу presentation-block -->
         <div class="set-card presentation-block">
             <h3>Презентація проєкту</h3>
             <div class="video-container">
@@ -121,7 +112,6 @@
             </div>
         </div>
 
-        <!-- Блок контактів -->
         <div class="set-card">
             <h3>Контакти для зв'язку</h3>
             <ul class="contacts-list">

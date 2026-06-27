@@ -1,10 +1,10 @@
-// ================= 1. ГЛОБАЛЬНІ ЗМІННІ =================
+
 const container = document.getElementById("jobs-container");
 let allJobs = []; 
 let currentFilteredJobs = []; 
 let targetUrl = "";
 let stickerTimeout;
-// pinned jobs stored by job URL
+
 let pinnedJobs = new Set(JSON.parse(localStorage.getItem("pinnedJobs") || "[]"));
 
 function savePinned() {
@@ -47,7 +47,7 @@ if (container) {
 
 async function loadJobs() {
     try {
-        // ✅ ВИПРАВЛЕНО: Відносний шлях для роботи на Render та локалхості одночасно
+        
         const response = await fetch("/api/jobs");
         const data = await response.json();
         allJobs = data.results || [];
@@ -119,7 +119,7 @@ function filterAndSortJobs() {
         return sortDateVal === "newest" ? dateB - dateA : dateA - dateB;
     });
 
-    // Move pinned jobs to top while keeping relative order
+    
     currentFilteredJobs.sort((a, b) => {
         const aPinned = pinnedJobs.has(a.url);
         const bPinned = pinnedJobs.has(b.url);
@@ -150,7 +150,7 @@ function renderJobs(jobs) {
         jobDiv.setAttribute("data-index", index);
         jobDiv.classList.toggle('pinned', pinnedJobs.has(job.url));
 
-        // pin button
+        
         const pinBtn = document.createElement('button');
         pinBtn.className = 'pin-btn';
         pinBtn.title = 'Закріпити вакансію';
@@ -214,7 +214,7 @@ function renderJobs(jobs) {
         jobDiv.appendChild(document.createElement("hr"));
         container.appendChild(jobDiv);
 
-        // Поява фейкових блоків кожні 5 вакансій
+        
         if ((index + 1) % 5 === 0 && fakeBlocks.length > 0) {
             const fakeData = fakeBlocks[fakeIndex];
             const fakeCard = document.createElement("div");
@@ -364,7 +364,6 @@ document.querySelectorAll(".save-trigger").forEach(element => {
     element.addEventListener("input", saveSettings); 
 });
 
-// ЕФЕКТ ЕПІЧНОЇ ЗМІНИ ТЕМИ РАЗОМ З ЖИВИМ IDOC
 const themeBtn = document.getElementById("theme-toggle-btn");
 if (themeBtn) {
     themeBtn.addEventListener("click", () => {
@@ -394,7 +393,6 @@ if (themeBtn) {
     });
 }
 
-// РЕАКЦІЯ IDOC НА ЗВИЧАЙНИЙ КЛІК ПО НЬОМУ
 const idocMascot = document.getElementById("idoc-mascot");
 if (idocMascot) {
     idocMascot.addEventListener("click", () => {
